@@ -1,0 +1,188 @@
+% Style fonde sur McECEThesis.sty
+
+% Style file for LaTeX2e
+%   - for use with documentclass report
+%     \usepackage [fancyhdr]{McECEThesis}
+% Edite par Anne-Laure
+
+% $Id: McECEThesis.sty,v 1.1 2005/06/09 12:48:17 kabal Exp $
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{styleThese}
+
+\newif\if@fancyhdr
+\DeclareOption{fancyhdr}{\@fancyhdrtrue}
+\DeclareOption{plainhdr}{\@fancyhdrfalse}
+
+\ExecuteOptions{plainhdr}
+\ProcessOptions
+
+%================== page layout
+\newdimen \insidemargin
+\newdimen \outsidemargin
+\newdimen \abovemargin
+\newdimen \belowmargin
+
+%===== page layout defined by 4 dimensions, others are calculated from these
+% Define the side margins for a right-side page
+\insidemargin = 1.3in		% Actual space
+\outsidemargin = 0.8in
+
+% Above margin is space above the header
+% Below margin is space below footer
+\abovemargin = 1cm %1.1in		% Actual space
+\belowmargin = 2cm %0.5in
+%=====
+
+% Leave more space for the header (originally 12pt)
+%\headheight = 15pt
+\headheight = 12pt% latex rale en disant qu'il le met a 14.49998pt de tte facon...
+
+% Other parameters retain their default values (values for 12pt documents)
+% \headsep - space from bottom of header to top of text (25pt)
+% \footskip - distance from the bottom of text to bottom of footer (30pt)
+
+% The rest of the dimensions are calculated from the above values
+% (compensation for TeX 1in margin offsets is done here)
+\textwidth = \paperwidth
+  \advance\textwidth by -\insidemargin
+  \advance\textwidth by -\outsidemargin
+\textheight = \paperheight
+  \advance \textheight by -\abovemargin
+  \advance \textheight by -\headheight
+  \advance \textheight by -\headsep
+  \advance \textheight by -\belowmargin
+  \advance \textheight by -\footskip
+\topmargin = \abovemargin
+  \advance \topmargin by -1in
+
+\oddsidemargin = \insidemargin
+  \advance\oddsidemargin by -1in
+\if@twoside
+  \evensidemargin = \outsidemargin
+    \advance\evensidemargin by -1in
+\else
+  \evensidemargin = \oddsidemargin
+\fi
+
+%========= Redefine \thebibliography to put a entry in the TOC
+%========= Change the name from "Bibliography" to "References"
+% \renewcommand\bibname{References}
+% \let\SV@thebibliography\thebibliography
+% \renewcommand{\thebibliography}[1]{%
+%   \if@twoside
+%     \cleardoublepage
+%   \else
+%     \clearpage
+%   \fi
+%   \addcontentsline{toc}{chapter}{\bibname}
+%   \SV@thebibliography{#1}}
+
+%========= Dummy definitions if datestamp package is not loaded
+\ifx\datestampbox\@undefined
+  \def\datestampbox{}
+  \def\rcs #1{}
+  \def\resetdatestamp{}
+\fi
+
+%========= Fancy headings setup
+% Single-sided printing
+%   header:   3.2 Section        5
+%             --------------------
+% Double-sided printing
+%   header:   4            Chapter
+%   even      --------------------
+%
+%   header:   3.2 Section        5
+%   odd       --------------------
+%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% TEST ANNLOR
+
+
+
+ \if@fancyhdr
+   \RequirePackage{fancyhdr}
+   \pagestyle{fancy}
+   \fancyhf{}
+   % \markboth : contient le nom du chapitre courant tel qu'il apparait dans la table des matieres.
+   % (et donc avec des minuscules, alors que par defaut, fancy le met en majuscules)
+   \renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+   % \markright : contient le nom de la section courante telle qu'elle apparait dans la table des matieres.
+   \renewcommand{\sectionmark}[1]{\markright{#1}}
+   % bas de pages
+   \fancyfoot[CE,CO]{\thepage}
+   % pages paires
+   % \thechapter = numero du chapitre courant et \leftmark = nom du chapitre courant
+   \fancyhead[EL]{Chapitre \thechapter~- \leftmark}
+   % pages impaires
+   % \thesection = numero de la section courante et \rightmark = nom de la section courante
+   \fancyhead[OR]{\thesection. \rightmark}
+   \renewcommand{\headrulewidth}{0.5pt}
+
+% Redefine plain style (used by \chapter) to just a page number at the top
+  \fancypagestyle{plain}{%
+    \fancyhf{}			% clear all fields
+    \fancyhead[LE,RO]{\bfseries \thepage}%
+    \fancyfoot[LO,RE]{\datestampbox}}
+ \fi
+
+% FIN TEST
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%================== general changes
+% Smaller section and subsection heads, ragged right
+% [classes.dtx]
+\def\veryraggedright{\advance\rightskip by 0pt plus 1fil\relax}
+\renewcommand\section{\@startsection {section}{1}{\z@}%
+	{-3.5ex \@plus -1ex \@minus -.2ex}%
+	{2.3ex \@plus.2ex}%
+	{\normalfont\large\bfseries\veryraggedright}}
+\renewcommand\subsection{\@startsection{subsection}{2}{\z@}%
+	{-3.25ex\@plus -1ex \@minus -.2ex}%
+	{1.5ex \@plus .2ex}%
+	{\normalfont\bfseries\veryraggedright}}
+
+% Placement of figures and tables htbp instead of tbp
+% Figure name, Table name in bold
+% [classes.dtx]
+\renewcommand\fps@figure{htbp}
+\renewcommand\fps@table{htbp}
+\renewcommand\fnum@figure{{\reset@font\bfseries\figurename~\thefigure}}
+\renewcommand\fnum@table{{\reset@font\bfseries\tablename~\thetable}}
+
+% Less space between the number and the section title (1em -> 0.5em)
+% [ltsect.dtx]
+\renewcommand\@seccntformat[1]{\csname the#1\endcsname\hskip 0.5em}
+
+% Float captions
+% - Prove a \Tcaption for "top" captions
+% - Remove ":" separating the number from the caption
+% - Typeset the caption in \small
+% - Set the caption in a narrower (80%) parbox
+% [classes.dtx]
+% Note: use "\hbox to" rather than "\hb@xt@" for older latex2e's
+\def\captiontextfraction{0.8}
+\def\captionfontsize{\small}
+\newdimen\aboveTcaptionskip \aboveTcaptionskip=\belowcaptionskip
+\newdimen\belowTcaptionskip \belowTcaptionskip=0.5\abovecaptionskip
+\def\Tcaption{%
+  \abovecaptionskip=\aboveTcaptionskip
+  \belowcaptionskip=\belowTcaptionskip
+  \caption}
+\long\def\@makecaption#1#2{%
+  \vskip\abovecaptionskip
+  \sbox\@tempboxa{\captionfontsize #1\quad #2}%
+  \ifdim \wd\@tempboxa >\captiontextfraction\hsize
+    \hbox to \hsize{\hfil%
+     \parbox{\captiontextfraction\hsize}{\captionfontsize #1\quad #2}%
+    \hfil}%
+  \else
+    \global \@minipagefalse
+    \hbox to \hsize{\hfil\box\@tempboxa\hfil}%
+  \fi
+  \vskip\belowcaptionskip}
+
+% Figure name becomes "Fig." (was "Figure")
+%\renewcommand\figurename{Fig.}

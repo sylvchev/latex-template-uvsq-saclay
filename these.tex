@@ -1,0 +1,302 @@
+% Canevas pour la these, fruit du labeur d'une longue lignee de
+% thesard-e-s inconnu-e-s. 
+
+% Pour compiler : latex, latex, biber, latex, latex
+\documentclass[12pt,a4paper]{book}
+
+% ----------- Langue 
+\usepackage[french]{babel}
+%\usepackage[T1]{utf8}
+\usepackage[T1]{fontenc}
+% remplacer latin1 par utf8 en fonction de l'encodage de votre fichier
+\usepackage[utf8]{inputenc}
+
+% ----------- Organisation
+\usepackage[french]{minitoc} % pour construire des mini tables des matieres
+
+%------------ Mise en forme
+\usepackage{fancyhdr}
+\usepackage[fancyhdr]{styleThese}  % style de these, avec notamment les entetes
+\usepackage{setspace} % pour pouvoir regler l'interligne
+\usepackage{url}% pour les url
+\usepackage[pdftex]{color}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor} %% To color in violet the text
+\definecolor{bordeau}{rgb}{0.3515625,0,0.234375} % la couleur de Paris-Saclay
+\usepackage[pdftex]{graphicx}
+\usepackage[absolute]{textpos} % to place elements in the page
+\usepackage{calc} % To calculate textwidth
+\usepackage{pgf} % Images: pdf, png, jpg, mais pas eps
+\usepackage{textcomp} % pour que 'ｰ' soit plus joli en francais
+% pour avoir des liens dans la table des matieres et sur les citations
+\usepackage[pdftex]{hyperref}
+% pour faire corriger les liens hypertextes, qui pointent par d伺aut le bas d'unefigure ou d'un tableau
+\usepackage{hypcap}
+\usepackage{geometry}% That nicely create a one-page template
+\usepackage{tikz} %% Make the square.
+\usepackage{afterpage} % pour inserer une commande après le pagebreak suivant
+\usepackage{csquotes} % pour utiliser les "guillemets" corrects en fonction de la langue
+
+%------------ Objets specifiques
+\usepackage{multicol} % pour pouvoir faire des cases de plusieurs colonnes dans les tableaux 
+\usepackage{multirow} % pour pouvoir faire des cases de plusieurs lignes dans les tableaux 
+\usepackage{supertabular} % pour les tableaux a cheval sur plusieurs pages
+\usepackage{listings} % pour afficher du code
+
+%------------ Pour la biblio
+\usepackage[backend=biber,citestyle=authoryear,sorting=none,defernumbers]{biblatex}
+\addbibresource{bibliothese.bib} % les ref biblio pour la thèse
+\addbibresource{mespublications.bib} % les ref de mes publications
+\defbibheading{bibempty}{} % pour gérer le niveau de titre de la biblio avec \chapter, \section, ...
+%\DeclareRefcontext{myarticles}{sorting=ynt,labelprefix="J"}
+
+% On utilise biblatex (ci-dessus), plutot que bibtex, pour avoir une biblio séparée des papiers publiés
+% pour faire des citations type Dupont (1978), avec \citet et \citep, voir http://www.ctan.org/pkg/natbib
+%\usepackage{natbib}
+% \usepackage{fnamed}% idem que la mise en forme named.bst de natbib mais en francais.
+
+%------------ Mathematiques
+\usepackage{amsmath,amssymb}
+
+
+%---------------------------------------------------
+%----------- COMMANDES ----------------------------
+%---------------------------------------------------
+
+\definecolor{lnkcol}{rgb}{0,0,0.93}
+\definecolor{extcol}{rgb}{0.33,0,0.55}
+\hypersetup{
+%    bookmarks=true,         % show bookmarks bar?
+%     unicode=true,           % non-Latin characters in Acrobat's bookmarks
+    pdftoolbar=true,        % show Acrobat's toolbar?
+    pdfmenubar=true,        % show Acrobat's menu?
+    pdffitwindow=true,      % page fit to window when opened
+    pdftitle={Titre},    % title
+    pdfauthor={Harry Cover},     % author
+    pdfsubject={sujet},   % subject of the document
+    pdfnewwindow=true,      % links in new window
+    pdfkeywords={keywords}, % list of keywords
+    colorlinks=true,        % false: boxed links; true: colored links
+    linkcolor=lnkcol,       % color of internal links
+    citecolor=lnkcol,       % color of links to bibliography
+    filecolor=magenta,      % color of file links
+    urlcolor=extcol         % color of external links
+}
+
+\setlength{\oddsidemargin}{0pt} \setlength{\evensidemargin}{0pt}
+\setlength{\marginparwidth}{0pt} \setlength{\marginparsep}{0pt}
+\parskip=6pt plus 2pt minus 3pt
+
+% Reglage de la profondeur de la table des matieres
+% 2 = on affiche les chapitres, les sections et les sous-sections
+\setcounter{tocdepth}{2}
+
+% Page blanche qui ne compte pas dans la numérotation
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \addtocounter{page}{-1}%
+    \newpage}
+
+% Interligne
+%\renewcommand{\baselinestretch}{1.3} \normalsize
+\setstretch{1.3}
+
+%---------------------------------------------------
+%----------- MACROS -------------------------
+%---------------------------------------------------
+\newcommand{\tmop}[1]{\ensuremath{\operatorname{#1}}}
+\newcommand{\Reel}{\mathbb{R}}
+% Titre de la thèse
+\newcommand{\PhDTitle}{Thesis title. It can extend over several lines (even 4 or 5)} 
+
+% Prénom Nom
+\newcommand{\PhDname}{Harry Cover} 
+
+%---------------------------------------------------------------------
+%--- DEBUT DU DOCUMENT -------------------------------
+%---------------------------------------------------------------------
+
+\begin{document}
+ 
+% ---------- Pour tout le document ----------
+% pour que des mini tables des matieres soient creees
+\dominitoc
+% pour que latex ne deborde pas dans la marge de droite
+\sloppy
+% -----------------------------------
+
+
+% ------------------------------------------------------------------
+% ---------- Page de garde ----------------------------------
+% ------------------------------------------------------------------
+\input{these_garde_upsay_v2}
+%\cleardoublepage
+\color{black}
+\clearpage
+
+% -------------------------------------------------------------------
+% -- Debut du document -------------------------------------
+% -------------------------------------------------------------------
+% les pages sont numerotees en romain
+\pagestyle{empty}
+\frontmatter
+
+%-------------------------------------------------------------------
+% --------- En-tetes du debut--------------------------------
+%-------------------------------------------------------------------
+% pour les pages standard
+\pagestyle{fancy}
+\fancyhf{}
+% on met juste le numero de page en bas de page
+% (C=Center, E=Even (pair), O=Odd (impair))
+\fancyfoot[CE,CO]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+% et pour les 1eres pages de chapitres
+\fancypagestyle{plain}{
+  \fancyhf{}
+  \fancyfoot[CE,CO]{\thepage}
+  \renewcommand{\headrulewidth}{0pt}
+}
+
+%-------------------------------------------------------------------
+% ---------- Resume -------------------------------------------
+%-------------------------------------------------------------------
+%\pagestyle{plain}
+\section*{Résumé}
+\input{these_resume}
+
+\section*{Abstract}
+\input{these_abstract}
+
+%-------------------------------------------------------------------
+% ---------- Table des matieres et autres ----------------
+%-------------------------------------------------------------------
+\tableofcontents 
+\listoffigures 
+\listoftables
+
+%-------------------------------------------------------------------
+% ---------- Remerciements ---------------------------------
+%-------------------------------------------------------------------
+\include{these_remerciements}
+
+%-------------------------------------------------------------------
+% -------- Coeur du manuscrit ------------------------------
+%-------------------------------------------------------------------
+% la numerotation des pages recommence et est en chiffres arabes
+\mainmatter
+\include{these_chap-intro}
+\thispagestyle{plain}
+
+%-------------------------------------------------------------------
+% -------- En-tetes a partir du 1er chapitre --------------
+%-------------------------------------------------------------------
+
+\pagestyle{fancy}
+
+\fancyhf{}
+%\markboth : contient le nom du chapitre courant tel qu'il apparait dans la table des matieres.
+%(et donc avec des minuscules, alors que par defaut, fancy le met en majuscules)
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+%\markright : contient le nom de la section courante telle qu'elle apparait dans la table des matieres.
+\renewcommand{\sectionmark}[1]{\markright{#1}}
+%bas de pages
+\fancyfoot[CE,CO]{\thepage}
+%pages paires
+%\thechapter = numero du chapitre courant et \leftmark = nom du chapitre courant
+\fancyhead[EL]{Chapitre \thechapter~- \leftmark}
+%pages impaires
+%\thesection = numero de la section courante et \rightmark = nom de la section courante
+\fancyhead[OR]{\thesection. \rightmark}
+
+\renewcommand{\headrulewidth}{0.5pt}
+
+%-------------------------------------------------------------------
+%--------- Chapitres--------------------------------------------
+%-------------------------------------------------------------------
+
+\include{these_chap-etatdelart}
+
+\include{these_chap-monprobleme}
+
+\include{these_chap-mesexpes}
+
+\include{these_chap-conclusion}
+
+%-------------------------------------------------------------------
+%--------- Bibliographie --------------------------------------
+%-------------------------------------------------------------------
+
+% --------- En-tetes de la fin (= debut) --------------------
+% pour les pages standard
+\pagestyle{fancy}
+\fancyhf{}
+% on met juste le numero de page en bas de page
+% (C=Center, E=Even (pair), O=Odd (impair))
+\fancyfoot[CE,CO]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+% et pour les 1eres pages de chapitres
+\fancypagestyle{plain}{
+  \fancyhf{}
+  \fancyfoot[CE,CO]{\thepage}
+  \renewcommand{\headrulewidth}{0pt}
+}
+
+\include{these_chap-mespubli}
+
+  \if@twoside
+    \cleardoublepage
+  \else
+    \clearpage
+  \fi
+
+\addstarredchapter{Bibliographie}
+
+% pour que la biblio ne soit pas enorme
+\begin{singlespace}
+    \printbibliography 
+\end{singlespace}
+
+\appendix
+
+\if@twoside
+    \cleardoublepage
+\else
+    \clearpage
+\fi
+
+% remettre a 0 tous les compteurs de fig, tab et eq.
+\renewcommand{\theequation}{A-\arabic{equation}}
+\setcounter{equation}{0}  % reset counter 
+\renewcommand{\thefigure}{A-\arabic{figure}}
+\setcounter{figure}{0}  % reset counter 
+\renewcommand{\thetable}{A-\arabic{table}}
+\setcounter{table}{0}  % reset counter 
+
+% comme les annexes peuvent etres longues, on remet les bordures de pages
+\pagestyle{fancy}
+
+\fancyhf{}
+%\markboth : contient le nom du chapitre courant tel qu'il apparait dans la table des matieres.
+%(et donc avec des minuscules, alors que par defaut, fancy le met en majuscules)
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+%\markright : contient le nom de la section courante telle qu'elle apparait dans la table des matieres.
+\renewcommand{\sectionmark}[1]{\markright{#1}}
+%bas de pages
+\fancyfoot[CE,CO]{\thepage}
+%pages paires
+%\thechapter = numero du chapitre courant et \leftmark = nom du chapitre courant
+\fancyhead[EL]{Chapitre \thechapter~- \leftmark}
+%pages impaires
+%\thesection = numero de la section courante et \rightmark = nom de la section courante
+\fancyhead[OR]{\thesection. \rightmark}
+\renewcommand{\headrulewidth}{0.5pt}
+
+\include{these_annexe-demonstrations}
+
+\include{these_annexe-resultatplus}
+
+\input{these_lastpage.tex}
+\end{document}
+
+
